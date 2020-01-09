@@ -1,0 +1,47 @@
+\section{Environment}
+The Environment contains information available to Maestro-Program,
+plugins and Maestro-Runtime. These entities can also update the Environment and
+thus create a new Environment.
+
+Some information is essential in FMI co-simulation, i.e. FMUs.
+For this reason, the Root Environment comes with the following entries (Types
+are described afterwards):
+\begin{description}
+  \item[RawFMUs] The raw FMU information. Perhaps from a UI. Type: Map[FmuKey, FmuPath]
+  \item[RawInstances] The raw instance information. Perhaps from a UI. Type: Map[FmuKey, List[InstanceKey]]
+  \item[RawConnections] The raw connections information. Perhaps from a UI.
+    Type: Map[{FmuKey, FmuInstance, ScalarVariableName}, Set[{FmuKey, FmuInstance, ScalarVariableName}]]
+  \item[RawParameters] The raw parameters information. Perhaps from a UI.
+    Type: Map[ParameterKey, Value] and Map[FMU, Map[Instance, Map[ScalarVariableName, ParameterKey]]]
+  \item[FMUsWithInstances] Enriches RawFMUs with ModelDescription information
+    and connects FMUs to their respective instances. Type: Map[Fmu, Set[Instance]]
+  \item[Connections] The connections based on FMUsWithInstances and variables
+    from the corresponding ModelDescription files. Type: Set[Connection]
+  \item[SortedDependantVariables] An list that describes the order of setting
+    and getting dependant scalar variables according to internal and external
+    dependencies. Type: List[ScalarVariableID]
+    \item[Custom] This entry can be used freely. Type: Map[CustomDataKey, Any].
+\end{description}
+
+Types:
+\begin{description}
+  \item[FmuKey] Unique identifier for a given FMU
+  \item[FmuPath] URI the a given FMU
+  \item[InstanceKey] Unique string identifier for a given instance
+  \item[ScalarVariableName] String with the name of a given scalar variable.
+    TODO: Perhaps valuereference, perhaps both?
+  \item[Fmu] Data object with FmuKey, FmuPath and ModelDescription.
+  \item[Instance] Data Object with parent FMU and InstanceKey
+  \item[ModelDescription] The parsed model description.
+  \item[Connection] Data Object with from : ScalarVariableID and to : Set[ScalarVariableID]
+  \item[ScalarVariableID] Data object that consists of FmuKey,
+    InstanceKey, ScalarVariableValueReference
+  \item[CustomDataKey] A unique identifier for some custom data.
+  \item[Any] Represents the value of custom data.
+    TODO: Represent as Sum Type with Any, JSON X, String X, Byte X?
+\end{description}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../Maestro"
+%%% End:
