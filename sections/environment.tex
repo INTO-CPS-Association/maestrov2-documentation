@@ -1,11 +1,19 @@
 \section{Environment}
 The Environment contains information available to Maestro-Program,
-plugins and Maestro-Runtime. These entities can also update the Environment and
-thus create a new Environment.
+plugins and Maestro-Runtime. These entities can also add information to the
+Environment by creating a new Environment, which shall contain data from the old
+environment that has not been updated.
 
-Some information is essential in FMI co-simulation, i.e. FMUs.
-For this reason, the Root Environment comes with the following entries (Types
-are described afterwards):
+\subsection{Environment Structure}
+This section describes the structure of the Root Environment and thereby what is
+supported natively. The reason for natively supporting some data is that it is
+considered essential for FMI co-simulation.
+First, the entries are described in an overall format. Afterwards, the types
+mentioned in the overall description. Note, that not all entries are populated
+by Maestro-Program prior to employing plugins. Some of these entries will be
+populated by plugins. TODO: Clearly describe which entries Maestro-Program
+populates.
+\paragraph{Overall Structure}
 \begin{description}
   \item[RawFMUs] The raw FMU information. Perhaps from a UI. Type: Map[FmuKey, FmuPath]
   \item[RawInstances] The raw instance information. Perhaps from a UI. Type: Map[FmuKey, List[InstanceKey]]
@@ -23,22 +31,23 @@ are described afterwards):
     \item[Custom] This entry can be used freely. Type: Map[CustomDataKey, Any].
 \end{description}
 
-Types:
+\paragraph{Types}
 \begin{description}
-  \item[FmuKey] Unique identifier for a given FMU
-  \item[FmuPath] URI the a given FMU
-  \item[InstanceKey] Unique string identifier for a given instance
-  \item[ScalarVariableName] String with the name of a given scalar variable.
+  \item[FmuKey] String: Unique identifier for a given FMU
+  \item[FmuPath] URI: Location of the FMU
+  \item[InstanceKey] String: Unique identifier for a given instance
+  \item[ScalarVariableName] String: Name of a given scalar variable.
     TODO: Perhaps valuereference, perhaps both?
-  \item[Fmu] Data object with FmuKey, FmuPath and ModelDescription.
-  \item[Instance] Data Object with parent FMU and InstanceKey
+  \item[Fmu] Data Object with FmuKey, FmuPath and ModelDescription.
+  \item[Instance] Data Object that consists of parent FMU and InstanceKey
   \item[ModelDescription] The parsed model description.
-  \item[Connection] Data Object with from : ScalarVariableID and to : Set[ScalarVariableID]
-  \item[ScalarVariableID] Data object that consists of FmuKey,
+  \item[Connection] Data Object with from of type ScalarVariableID and to of type Set[ScalarVariableID]
+  \item[ScalarVariableID] Data Object that consists of FmuKey,
     InstanceKey, ScalarVariableValueReference
-  \item[CustomDataKey] A unique identifier for some custom data.
-  \item[Any] Represents the value of custom data.
-    TODO: Represent as Sum Type with Any, JSON X, String X, Byte X?
+  \item[CustomDataKey] String: Unique identifier for some custom data.
+  \item[Any] Represents the value associated with a CustomDataKey.
+    TODO: Represent as Sum Type: Any (Any) | JSON (String) | Text (String) |
+    Byte (Array[Byte]) | ?
 \end{description}
 
 %%% Local Variables:
