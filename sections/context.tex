@@ -1,15 +1,14 @@
-\section{Environment}
-The Environment contains information available to Maestro-Program,
+\section{Context}
+The Context contains information available to Maestro-Program,
 plugins and Maestro-Runtime. These entities can also add information to the
-Environment by creating a new Environment, which shall contain data from the old
-environment that has not been updated.
+Context by creating a new Context.
 
-\subsection{Environment Structure}
-This section describes the structure of the Root Environment and thereby what is
+\subsection{Context Structure}
+This section describes the structure of the Root Context and thereby what is
 supported natively. The reason for natively supporting some data is that it is
 considered essential for FMI co-simulation.
-First, the entries are described in an overall format. Afterwards, the types
-mentioned in the overall description. Note, that not all entries are populated
+First, the entries are presented with an overall description. Afterwards, the types
+mentioned in the overall description are described. Note, that not all entries are populated
 by Maestro-Program prior to employing plugins. Some of these entries will be
 populated by plugins. TODO: Clearly describe which entries Maestro-Program
 populates.
@@ -20,7 +19,9 @@ populates.
   \item[RawConnections] The raw connections information. Perhaps from a UI.
     Type: Map[{FmuKey, FmuInstance, ScalarVariableName}, Set[{FmuKey, FmuInstance, ScalarVariableName}]]
   \item[RawParameters] The raw parameters information. Perhaps from a UI.
-    Type: Map[ParameterKey, Value] and Map[FMU, Map[Instance, Map[ScalarVariableName, ParameterKey]]]
+    Type: Map[ParameterKey, Value] and Map[FMU, Map[Instance,
+    Map[ScalarVariableName, ParameterKey]]]
+  \item[Parameters] Parsed parameter information. Map[ScalarVariableID]
   \item[FMUsWithInstances] Enriches RawFMUs with ModelDescription information
     and connects FMUs to their respective instances. Type: Map[Fmu, Set[Instance]]
   \item[Connections] The connections based on FMUsWithInstances and variables
@@ -38,12 +39,11 @@ populates.
   \item[InstanceKey] String: Unique identifier for a given instance
   \item[ScalarVariableName] String: Name of a given scalar variable.
     TODO: Perhaps valuereference, perhaps both?
-  \item[Fmu] Data Object with FmuKey, FmuPath and ModelDescription.
+  \item[Fmu] Data Object with FmuKey, FmuPath, ModelDescription.
   \item[Instance] Data Object that consists of parent FMU and InstanceKey
   \item[ModelDescription] The parsed model description.
   \item[Connection] Data Object with from of type ScalarVariableID and to of type Set[ScalarVariableID]
-  \item[ScalarVariableID] Data Object that consists of FmuKey,
-    InstanceKey, ScalarVariableValueReference
+  \item[ScalarVariableID] Data Object that consists of Instance and ScalarVariableValueReference
   \item[CustomDataKey] String: Unique identifier for some custom data.
   \item[Any] Represents the value associated with a CustomDataKey.
     TODO: Represent as Sum Type: Any (Any) | JSON (String) | Text (String) |
