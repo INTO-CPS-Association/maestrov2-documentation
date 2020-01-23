@@ -1,97 +1,63 @@
 \section{Introduction}\label{sec:intro}
+Maestro is a plugin-based framework built for specifying and executing co-simulations based
+on The Functional Mock-up Interface 2.0 and 2.1 standard for co-simulation. It
+is currently being developed.
 
-Maestro is a framework built for orchestrating co-simulations based on the
-Functional Mock-Up Interface 2.0 standard for co-simulation.
+There are three steps involved in conducting a co-simulation using Maestro:
+\begin{enumerate}
+  \item Creating a specification of a FMI-based co-simulation to be executed.
+  \item Verifying the specification.
+  \item Executing the specification.
+\end{enumerate}
 
-TODO: Insert figure with: Program, Verification, Runtime to present the
-high-level idea.
-
-The framework is divided into two main parts: Maestro-Program and
-Maestro-Runtime. These entities and the flow of conducting a co-simulation using
-MaestroV2 is depicted in \cref{fig:conducting_co-simulation-overview} and
-described in this section.
-
+The specification of a co-simulation is based on a Domain Specific Language (DSL) called Maestro
+Base Language (MaBL). An MaBL specification is created by adding, editing and/or
+removing nodes in the Abstract Syntax Tree (AST) of the specification in question and not by
+writing it by hand. The main
+reason for this approach is the effort involved in developing Integrated Development
+Environment functionality for MaBL. Some of the major goals for this language are:
 \begin{description}
-  \item[Maestro-Program] is the entity that controls the process of creating a
-program. A Program specifies how to conduct a co-simulation and consists of
-commands to be carried out by Maestro-Runtime. In order to create a Program,
-Maestro-Program employs plugins. The creation of a Program is referred to as the
-Program Phase.
-  \item[Maestro-Runtime] is the entity that controls the process of executing a
-program. The execution of a program is referred to as the Execution Phase.
-
+  \item[Goal 1:] MaBL shall be capable of expressing both industry and
+    research-related co-simulation scenarios.
+  \item[Goal 2:] MaBL shall be constrained such that specifications can be
+    verified.
+    \item[Goal 3:] It shall be possible to serialise an MaBL specification such
+    that it can be passed to a runtime for execution.
 \end{description}
-\begin{figure}[htb] \centering
-\includegraphics[width=\textwidth]{figures/conducting_co-simulation_overview.pdf}
-  \caption{Conducting a co-simulation with Maestro-Program and Maestro-Runtime}
-  \label{fig:conducting_co-simulation-overview}
-\end{figure}
+It is expected that aligning these goals will present challenges and for this
+reason, the initial version of MaBL does not cover all considered features and
+use cases. The considered features and use cases are available at TODO REF
+FEATURES AND USE CASES.
 
-The following paragraphs describes the content of the figure. Initially, some
-terminology and definitions are presented followed by a description of the
-consecutive behavior.
-\begin{description}
-  \item[Context] Context is data and information related to the co-simulation.
-    For example, the FMUs to employ in a given co-simulation or the dependencies
-    between the variables of the FMUs for a given co-simulation.
-  \item[Environment] The environment is information related to variables. For
-    example, type information or the value of a given variable.
-  \item[ProgramContext] Terminology for the Context used in relation to
-    Maestro-Program.
-  \item[ProgramEnvironment] Terminology for the Environment used in relation to
-    Maestro-Program.
-  \item[RuntimeContext] Terminology for Context used in relation to
-    Maestro-Runtime.
-  \item[RuntimeEnvironment] Terminology for the Environment used in relation to
-    Maestro-Runtime. This contains i.e. variables in scope and values of variables.
-  \item[PluginContext] A plugin specific Context. Maestro-Runtime does not know
-    its content and the code to process it must be provided by the respective
-    plugin.
-    \item[Configuration] Configuration describing how to create the Program,
-    i.e. which FMUs and plugins to use.
-  \item[Root Context] Terminology for the initial Program Context. Examples of
-    data in the Root Context is i.e. FMUs to use in a
-    co-simulation and parameters for the FMUs.
-  \item[Program] A Program is a complete in the sense that it can be passed to
-    Maestro-Runtime for execution as opposed to a ProgramFragment described below.
-  \item[Program Fragment] A Program Fragment is part of a Program.
-  \item[Plugin] During the Program phase a plugin can read/update the Program
-    Fragment, and/or read/update the ProgramContext and/or read/update the
-    ProgramEnvironment. An example of ProgramContext information that a plugin can
-    add is the dependencies between the variables of the FMUs. An example of a
-    Program Fragment that a plugin can create is the necessary commands to perform
-    initialisation of the FMUs. During the Runtime phase a plugin can read/update
-    the RuntimeEnvironment, read/update the PluginContext and/or create commands to
-    be executed immediately.
-\end{description}
+The process of creating a specification is to be carried out via plugins, which
+leads to another part of the Maestro framework. Maestro is based on plugins that
+offer certain functionality. For example, a plugin can generate the MaBL
+specification for initializing the FMUs of a co-simulation. Plugins can be
+combined such that the joined MaBL specification specifies a complete
+co-simulation that can be executed by a runtime.
 
-The Activator in \cref{fig:conducting_co-simulation-overview} is the entity
-(person or tool) that launches a co-simulation. The Activator shall provide a
-Configuration. See TODO.
+The previous paragraph mentioned ``a complete co-simulation'', which has not
+been qualified. This leads us to the next part - verifying the specification.
+The verification of specifications, also based on plugins, will give meaning
+to ``a complete co-simulation'', which might be different from scenario to scenario.
 
-Maestro-Program invokes the plugins according to the configuration. This
-is demonstrated in \cref{fig:conducting_co-simulation-overview} where Plugin 1
-receives ProgramContext 1, ProgramEnvironment 1, ProgramFragment 1 and
-creates: ProgramContext 2, ProgramEnvironment 2 and ProgramFragment 2. This is
-then passed to Plugin 2 and so on until no more plugins are specified. At this
-stage it is expected that a Program has been created. It is then possible to
-verify the Program, which is also based on plugins. The verification plugins can
-report their results but cannot update the Program, context or environment. The
-result of the Program phase is:
-A Program (Program in the figure), a Context (Context X in the figure) and an Environment (Environment X
-in the figure)
+The final part of conducting a co-simulation is to execute the verified
+specification. Maestro is envisioned to provide a C++-based runtime for
+executing MaBL specifications. However it is possible to provide other runtimes since a MaBL specification can be
+serialised. For the reason, creating, verifying and executing specifications are
+decoupled.
 
-Maestro-Runtime executes the Program and can utilise the related Context and Environment.
-It is possibly to create commands in
-the Program that prompts Maestro-Runtime to invoke a specific plugin. The plugin
-will be invoked with the initial Context (Context X in the figure), the Runtime
-Environment (RunTimeEnvironment in the figure) and a Context for the specific plugin (PluginContext in the figure).
+The features and use cases being considered to provide support for by Maestro is
+described in \cref{sec:features_use-cases}. \cref{sec:approach} presents an
+extended description of how the different components of Maestro are joined to
+conduct a co-simulation. Next, \cref{sec:mabl} presents the MaBL specification
+language. The publication then elaborates on plugins for creating and verifying
+specifications in \cref{sec:plugins}. Afterwards, \cref{sec:examples} presents
+examples and finally, \cref{sec:future-work} presents ideas
+on the future work of Maestro.
 
 
-
-\subsection{TO BE DONE}
-\begin{itemize}
-
-\end{itemize}
-
-%%% Local Variables: %%% mode: latex %%% TeX-master: "../Maestro" %%% End:
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../Maestro"
+%%% End:
