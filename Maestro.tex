@@ -129,8 +129,31 @@ Casper Thule, Aarhus University, Centre for Digital Twins \\
 \section*{Abstract}
 \label{sec:abstract}
 %
-TBD
-%
+Maestro is a co-simulation orchestration engine for FMI 2.0 originally developed as part of the INTO-CPS project from 2016-2018. This publication
+concerns the new Maestro that will take over for the existing tool.
+
+The motivation for recreating Maestro is to make it more flexible and provide
+better support for verification. This will be carried out by defining a language
+called Maestro Base Language (MaBL) that can be used to create a specification
+of a co-simulation to be carried out. The flexibility is introduced by enabling
+the possibility to combine the constructs of the language in various ways to
+support different scenarios. Having a specification of a co-simulation that can
+be passed to verification tools is an improvement in terms of verification, as
+it is now clear what is to be executed. MaBL has been constrained in in order to
+simplify this process. Finally, Maestro will also incorporate a runtime that can
+execute MaBL specifications.
+
+The flexibility is also expressed in the nature of creating a specification and
+verifying it, as these phases are based on plugins. Furthermore, plugins can be composed such
+that they jointly represent a specification or multiple verification efforts. Thus, if something is
+missing in order to support a certain scenario or verification task, it is
+possible to create a plugin that Maestro will make use of.
+
+
+The ambition is that Maestro can support both research-oriented efforts in
+co-simulation but also industry-related activities. As the development is in
+progress, the Maestro team is very interested in feedback, features, use cases,
+plugins and similar. The repository is available at \url{https://github.com/into-cps-association/maestrov2}
 \newpage
 %
 %%%% Document table of contents page %%%%
